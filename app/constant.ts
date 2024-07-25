@@ -202,8 +202,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
 };
 
 const openaiModels = [
-  "gpt-4o",
   "gpt-4o-mini",
+  "gpt-4o",
 ];
 
 const googleModels = [
