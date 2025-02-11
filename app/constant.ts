@@ -116,7 +116,20 @@ export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
 
 export enum ServiceProvider {
   OpenAI = "OpenAI",
+  Azure = "Azure",
+  Google = "Google",
+  Anthropic = "Anthropic",
+  Baidu = "Baidu",
+  ByteDance = "ByteDance",
+  Alibaba = "Alibaba",
+  Tencent = "Tencent",
+  Moonshot = "Moonshot",
+  Stability = "Stability",
+  Iflytek = "Iflytek",
+  XAI = "XAI",
+  ChatGLM = "ChatGLM",
   DeepSeek = "DeepSeek",
+  SiliconFlow = "SiliconFlow",
 }
 
 // Google API safety settings, see https://ai.google.dev/gemini-api/docs/safety-settings
@@ -129,10 +142,33 @@ export enum GoogleSafetySettingsThreshold {
 }
 
 export enum ModelProvider {
+  Stability = "Stability",
   GPT = "GPT",
+  GeminiPro = "GeminiPro",
+  Claude = "Claude",
+  Ernie = "Ernie",
+  Doubao = "Doubao",
+  Qwen = "Qwen",
+  Hunyuan = "Hunyuan",
+  Moonshot = "Moonshot",
+  Iflytek = "Iflytek",
+  XAI = "XAI",
+  ChatGLM = "ChatGLM",
   DeepSeek = "DeepSeek",
+  SiliconFlow = "SiliconFlow",
 }
 
+export const Stability = {
+  GeneratePath: "v2beta/stable-image/generate",
+  ExampleEndpoint: "https://api.stability.ai",
+};
+
+export const Anthropic = {
+  ChatPath: "v1/messages",
+  ChatPath1: "v1/complete",
+  ExampleEndpoint: "https://api.anthropic.com",
+  Vision: "2023-06-01",
+};
 
 export const OpenaiPath = {
   ChatPath: "v1/chat/completions",
@@ -143,13 +179,86 @@ export const OpenaiPath = {
   ListModelPath: "v1/models",
 };
 
+export const Azure = {
+  ChatPath: (deployName: string, apiVersion: string) =>
+    `deployments/${deployName}/chat/completions?api-version=${apiVersion}`,
+  // https://<your_resource_name>.openai.azure.com/openai/deployments/<your_deployment_name>/images/generations?api-version=<api_version>
+  ImagePath: (deployName: string, apiVersion: string) =>
+    `deployments/${deployName}/images/generations?api-version=${apiVersion}`,
+  ExampleEndpoint: "https://{resource-url}/openai",
+};
+
+export const Google = {
+  ExampleEndpoint: "https://generativelanguage.googleapis.com/",
+  ChatPath: (modelName: string) =>
+    `v1beta/models/${modelName}:streamGenerateContent`,
+};
+
+export const Baidu = {
+  ExampleEndpoint: BAIDU_BASE_URL,
+  ChatPath: (modelName: string) => {
+    let endpoint = modelName;
+    if (modelName === "ernie-4.0-8k") {
+      endpoint = "completions_pro";
+    }
+    if (modelName === "ernie-4.0-8k-preview-0518") {
+      endpoint = "completions_adv_pro";
+    }
+    if (modelName === "ernie-3.5-8k") {
+      endpoint = "completions";
+    }
+    if (modelName === "ernie-speed-8k") {
+      endpoint = "ernie_speed";
+    }
+    return `rpc/2.0/ai_custom/v1/wenxinworkshop/chat/${endpoint}`;
+  },
+};
+
+export const ByteDance = {
+  ExampleEndpoint: "https://ark.cn-beijing.volces.com/api/",
+  ChatPath: "api/v3/chat/completions",
+};
+
+export const Alibaba = {
+  ExampleEndpoint: ALIBABA_BASE_URL,
+  ChatPath: "v1/services/aigc/text-generation/generation",
+};
+
+export const Tencent = {
+  ExampleEndpoint: TENCENT_BASE_URL,
+};
+
+export const Moonshot = {
+  ExampleEndpoint: MOONSHOT_BASE_URL,
+  ChatPath: "v1/chat/completions",
+};
+
+export const Iflytek = {
+  ExampleEndpoint: IFLYTEK_BASE_URL,
+  ChatPath: "v1/chat/completions",
+};
 
 export const DeepSeek = {
   ExampleEndpoint: DEEPSEEK_BASE_URL,
   ChatPath: "chat/completions",
 };
 
+export const XAI = {
+  ExampleEndpoint: XAI_BASE_URL,
+  ChatPath: "v1/chat/completions",
+};
 
+export const ChatGLM = {
+  ExampleEndpoint: CHATGLM_BASE_URL,
+  ChatPath: "api/paas/v4/chat/completions",
+  ImagePath: "api/paas/v4/images/generations",
+  VideoPath: "api/paas/v4/videos/generations",
+};
+
+export const SiliconFlow = {
+  ExampleEndpoint: SILICONFLOW_BASE_URL,
+  ChatPath: "v1/chat/completions",
+};
 
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
 // export const DEFAULT_SYSTEM_TEMPLATE = `
@@ -479,7 +588,7 @@ const iflytekModels = [
   "4.0Ultra",
 ];
 
-const deepseekModels = ["deepseek-chat", "deepseek-coder", "deepseek-reasoner"];
+const deepseekModels = ["deepseek-v3", "deepseek-r1"];
 
 const xAIModes = [
   "grok-beta",
@@ -542,127 +651,6 @@ export const DEFAULT_MODELS = [
       sorted: 1, // 这里是固定的，确保顺序与之前内置的版本一致
     },
   })),
-  ...openaiModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "azure",
-      providerName: "Azure",
-      providerType: "azure",
-      sorted: 2,
-    },
-  })),
-  ...googleModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "google",
-      providerName: "Google",
-      providerType: "google",
-      sorted: 3,
-    },
-  })),
-  ...anthropicModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "anthropic",
-      providerName: "Anthropic",
-      providerType: "anthropic",
-      sorted: 4,
-    },
-  })),
-  ...baiduModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "baidu",
-      providerName: "Baidu",
-      providerType: "baidu",
-      sorted: 5,
-    },
-  })),
-  ...bytedanceModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "bytedance",
-      providerName: "ByteDance",
-      providerType: "bytedance",
-      sorted: 6,
-    },
-  })),
-  ...alibabaModes.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "alibaba",
-      providerName: "Alibaba",
-      providerType: "alibaba",
-      sorted: 7,
-    },
-  })),
-  ...tencentModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "tencent",
-      providerName: "Tencent",
-      providerType: "tencent",
-      sorted: 8,
-    },
-  })),
-  ...moonshotModes.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "moonshot",
-      providerName: "Moonshot",
-      providerType: "moonshot",
-      sorted: 9,
-    },
-  })),
-  ...iflytekModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "iflytek",
-      providerName: "Iflytek",
-      providerType: "iflytek",
-      sorted: 10,
-    },
-  })),
-  ...xAIModes.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "xai",
-      providerName: "XAI",
-      providerType: "xai",
-      sorted: 11,
-    },
-  })),
-  ...chatglmModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "chatglm",
-      providerName: "ChatGLM",
-      providerType: "chatglm",
-      sorted: 12,
-    },
-  })),
   ...deepseekModels.map((name) => ({
     name,
     available: true,
@@ -672,17 +660,6 @@ export const DEFAULT_MODELS = [
       providerName: "DeepSeek",
       providerType: "deepseek",
       sorted: 13,
-    },
-  })),
-  ...siliconflowModels.map((name) => ({
-    name,
-    available: true,
-    sorted: seq++,
-    provider: {
-      id: "siliconflow",
-      providerName: "SiliconFlow",
-      providerType: "siliconflow",
-      sorted: 14,
     },
   })),
 ] as const;
