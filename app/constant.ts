@@ -146,21 +146,21 @@ export enum GoogleSafetySettingsThreshold {
 }
 
 export enum ModelProvider {
-  // Stability = "Stability",
+  Stability = "Stability",
   GPT = "GPT",
-  // GeminiPro = "GeminiPro",
-  // Claude = "Claude",
-  // Ernie = "Ernie",
-  // Doubao = "Doubao",
-  // Qwen = "Qwen",
-  // Hunyuan = "Hunyuan",
-  // Moonshot = "Moonshot",
-  // Iflytek = "Iflytek",
-  // XAI = "XAI",
-  // ChatGLM = "ChatGLM",
-  // DeepSeek = "DeepSeek",
-  // SiliconFlow = "SiliconFlow",
-  // "302.AI" = "302.AI",
+  GeminiPro = "GeminiPro",
+  Claude = "Claude",
+  Ernie = "Ernie",
+  Doubao = "Doubao",
+  Qwen = "Qwen",
+  Hunyuan = "Hunyuan",
+  Moonshot = "Moonshot",
+  Iflytek = "Iflytek",
+  XAI = "XAI",
+  ChatGLM = "ChatGLM",
+  DeepSeek = "DeepSeek",
+  SiliconFlow = "SiliconFlow",
+  "302.AI" = "302.AI",
 }
 
 export const Stability = {
